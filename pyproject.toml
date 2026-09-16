@@ -1,0 +1,18 @@
+[project]
+name = "hr-tool"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.141.1",
+    "requests>=2.34.2",
+    "uvicorn>=0.53.0",
+]
+
+[project.scripts]
+hr-tool = "hr_tool:main"
+
+[build-system]
+requires = ["uv_build>=0.12.15,<0.13.0"]
+build-backend = "uv_build"
