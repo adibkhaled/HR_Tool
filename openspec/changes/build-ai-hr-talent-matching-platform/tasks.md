@@ -1,9 +1,9 @@
 ## 1. Phase 1: Architecture and project setup
 
-- [ ] 1.1 Create the clean-architecture monorepo structure for `backend/app`, `frontend/src`, `infra/docker`, `infra/kubernetes`, `docs`, and test suites; verify expected directories and ownership boundaries exist.
-- [ ] 1.2 Configure FastAPI, React/Vite/TypeScript, Material UI, TanStack Query, Zustand, SQLAlchemy, Alembic, Pytest, Vitest, linting, formatting, and type checks; verify dependency installation and baseline tests succeed.
-- [ ] 1.3 Add environment configuration and secret validation for database, pgvector, JWT, object storage, embedding model, LLM providers, CORS, and observability; verify missing required production settings fail safely at startup.
-- [ ] 1.4 Add `/health`, `/ready`, OpenAPI metadata, correlation IDs, structured redacted logging, and a system architecture document; verify health distinguishes process readiness from dependency readiness.
+- [x] 1.1 Create the clean-architecture monorepo structure for `backend/app`, `frontend/src`, `infra/docker`, `infra/kubernetes`, `docs`, and test suites; verify expected directories and ownership boundaries exist.
+- [x] 1.2 Configure FastAPI, React/Vite/TypeScript, Material UI, TanStack Query, Zustand, SQLAlchemy, Alembic, Pytest, Vitest, linting, formatting, and type checks; verify dependency installation and baseline tests succeed.
+- [x] 1.3 Add environment configuration and secret validation for database, pgvector, JWT, object storage, embedding model, LLM providers, CORS, and observability; verify missing required production settings fail safely at startup.
+- [x] 1.4 Add `/health`, `/ready`, OpenAPI metadata, correlation IDs, structured redacted logging, and a system architecture document; verify health distinguishes process readiness from dependency readiness.
 
 ## 2. Phase 2: Database, schema, and authentication
 

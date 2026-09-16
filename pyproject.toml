@@ -5,9 +5,19 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.16.5",
     "fastapi>=0.141.1",
-    "requests>=2.34.2",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.10.1",
+    "sqlalchemy>=2.0.43",
     "uvicorn>=0.53.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.1",
+    "pytest>=8.4.2",
+    "ruff>=0.13.0",
 ]
 
 [project.scripts]
@@ -16,3 +26,15 @@ hr-tool = "hr_tool:main"
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
