@@ -5,3 +5,4 @@ uv.lock
 tests/__pycache__/*
 tests/*/__pycache__/*
 data/*
+.env
