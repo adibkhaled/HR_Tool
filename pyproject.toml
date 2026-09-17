@@ -11,6 +11,7 @@ dependencies = [
     "bcrypt>=4.1.2,<5.0.0",
     "passlib[bcrypt]>=1.7.4",
     "PyJWT>=2.10.1",
+    "python-multipart>=0.0.20",
     "pydantic-settings>=2.10.1",
     "sqlalchemy>=2.0.43",
     "uvicorn>=0.53.0",
@@ -21,6 +22,7 @@ dev = [
     "mypy>=1.17.1",
     "pytest>=8.4.2",
     "ruff>=0.13.0",
+    "pip-audit>=2.9.0",
 ]
 
 [project.scripts]

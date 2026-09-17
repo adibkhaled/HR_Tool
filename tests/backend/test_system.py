@@ -3,6 +3,21 @@ from fastapi.testclient import TestClient
 from backend.app.main import app
 
 
+def test_root_describes_service_endpoints() -> None:
+    with TestClient(app) as client:
+        response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "service": "HR Talent Matching Platform API",
+        "health": "/health",
+        "readiness": "/ready",
+        "metrics": "/metrics",
+        "openapi": "/docs",
+    }
+    assert response.headers["X-Correlation-ID"]
+
+
 def test_health_is_process_liveness() -> None:
     with TestClient(app) as client:
         response = client.get("/health")

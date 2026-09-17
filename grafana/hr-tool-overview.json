@@ -1,0 +1,12 @@
+{
+  "title": "HR Tool Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {"type": "timeseries", "title": "Request latency", "targets": [{"expr": "rate(hr_tool_request_duration_seconds_sum[5m]) / rate(hr_tool_request_duration_seconds_count[5m])"}]},
+    {"type": "timeseries", "title": "Processing failures", "targets": [{"expr": "rate(hr_tool_processing_failed_total[5m])"}]},
+    {"type": "timeseries", "title": "Queue depth", "targets": [{"expr": "hr_tool_queue_depth"}]},
+    {"type": "timeseries", "title": "Match and grounded results", "targets": [{"expr": "rate(hr_tool_match_runs_total[5m])"}, {"expr": "hr_tool_grounded_results"}]},
+    {"type": "timeseries", "title": "Security and API errors", "targets": [{"expr": "rate(hr_tool_requests_401_total[5m]) + rate(hr_tool_requests_403_total[5m]) + rate(hr_tool_requests_500_total[5m])"}]}
+  ]
+}

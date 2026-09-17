@@ -14,3 +14,5 @@ The HR Talent Matching Platform is a clean-architecture monorepo.
 - `tests/backend`, `tests/frontend`: backend and frontend verification suites.
 
 `/health` reports process liveness only. `/ready` reports whether configured runtime dependencies are ready and returns HTTP 503 when they are not. Every response receives an `X-Correlation-ID` for request tracing.
+
+See [the ERD](erd.md), [the RAG sequence](rag-sequence.md), [deployment guidance](deployment.md), and [the operator runbook](operator-runbook.md) for runtime relationships and procedures.

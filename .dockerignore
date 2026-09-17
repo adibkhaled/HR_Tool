@@ -1,0 +1,11 @@
+frontend/node_modules
+frontend/dist
+frontend/tsconfig.tsbuildinfo
+.venv
+__pycache__
+*.pyc
+.git
+.gitignore
+.env
+.env.*
+data/documents

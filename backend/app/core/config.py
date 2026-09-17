@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     llm_provider: str = "openai"
     llm_api_key: SecretStr | None = None
     llm_model: str = "gpt-4o-mini"
+    llm_base_url: str = "http://localhost:11434"
     cors_origins: list[str] = ["http://localhost:5173"]
     otel_endpoint: str | None = None
     log_level: str = "INFO"
@@ -32,7 +33,10 @@ class Settings(BaseSettings):
             return
 
         missing: list[str] = []
-        if self.jwt_secret.get_secret_value() == "development-only-change-me":
+        if (
+            self.jwt_secret.get_secret_value() == "development-only-change-me"
+            or len(self.jwt_secret.get_secret_value()) < 32
+        ):
             missing.append("JWT_SECRET")
         if self.database_url.startswith("postgresql+psycopg://hr_tool:hr_tool@localhost"):
             missing.append("DATABASE_URL")

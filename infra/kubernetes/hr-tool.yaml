@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hr-tool-secrets
+type: Opaque
+stringData:
+  DATABASE_URL: replace-at-deploy-time
+  JWT_SECRET: replace-at-deploy-time
+  POSTGRES_PASSWORD: replace-at-deploy-time
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hr-tool-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: hr-tool-api }
+  template:
+    metadata: { labels: { app: hr-tool-api } }
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/example/hr-tool-api:latest
+          ports: [{ containerPort: 8000 }]
+          envFrom: [{ secretRef: { name: hr-tool-secrets } }]
+          readinessProbe: { httpGet: { path: /ready, port: 8000 }, periodSeconds: 10 }
+          livenessProbe: { httpGet: { path: /health, port: 8000 }, periodSeconds: 15 }
+          resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { cpu: 1, memory: 1Gi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hr-tool-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: hr-tool-worker }
+  template:
+    metadata: { labels: { app: hr-tool-worker } }
+    spec:
+      containers:
+        - name: worker
+          image: ghcr.io/example/hr-tool-api:latest
+          command: ["python", "-m", "backend.app.worker"]
+          envFrom: [{ secretRef: { name: hr-tool-secrets } }]
+          resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { cpu: 1, memory: 1Gi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hr-tool-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: hr-tool-frontend }
+  template:
+    metadata: { labels: { app: hr-tool-frontend } }
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/example/hr-tool-frontend:latest
+          ports: [{ containerPort: 80 }]
+          readinessProbe: { httpGet: { path: /, port: 80 }, periodSeconds: 10 }
+          livenessProbe: { httpGet: { path: /, port: 80 }, periodSeconds: 15 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hr-tool-frontend
+spec:
+  selector: { app: hr-tool-frontend }
+  ports: [{ port: 80, targetPort: 80 }]
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hr-tool-migrations
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migrations
+          image: ghcr.io/example/hr-tool-api:latest
+          command: ["alembic", "-c", "backend/alembic.ini", "upgrade", "head"]
+          envFrom: [{ secretRef: { name: hr-tool-secrets } }]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hr-tool-pgvector
+spec:
+  serviceName: hr-tool-pgvector
+  replicas: 1
+  selector:
+    matchLabels: { app: hr-tool-pgvector }
+  template:
+    metadata: { labels: { app: hr-tool-pgvector } }
+    spec:
+      containers:
+        - name: postgres
+          image: pgvector/pgvector:pg16
+          ports: [{ containerPort: 5432 }]
+          env:
+            - name: POSTGRES_DB
+              value: hr_tool
+            - name: POSTGRES_USER
+              value: hr_tool
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: hr-tool-secrets, key: POSTGRES_PASSWORD } }
+          readinessProbe: { exec: { command: ["pg_isready", "-U", "hr_tool", "-d", "hr_tool"] }, periodSeconds: 10 }
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources: { requests: { storage: 10Gi } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hr-tool-pgvector
+spec:
+  selector: { app: hr-tool-pgvector }
+  ports: [{ port: 5432, targetPort: 5432 }]
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hr-tool-api
+spec:
+  scaleTargetRef: { apiVersion: apps/v1, kind: Deployment, name: hr-tool-api }
+  minReplicas: 2
+  maxReplicas: 8
+  metrics: [{ type: Resource, resource: { name: cpu, target: { type: Utilization, averageUtilization: 70 } } }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hr-tool-api
+spec:
+  selector: { app: hr-tool-api }
+  ports: [{ port: 8000, targetPort: 8000 }]
