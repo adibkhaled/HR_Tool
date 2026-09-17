@@ -7,21 +7,21 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    app_name: str = "HR Talent Matching Platform"
-    app_env: str = "development"
-    database_url: str = "postgresql+psycopg://hr_tool:hr_tool@localhost:5432/hr_tool"
-    pgvector_enabled: bool = True
+    app_name: str
+    app_env: str
+    database_url: str
+    pgvector_enabled: bool
     jwt_secret: SecretStr = Field(default=SecretStr("development-only-change-me"))
-    object_storage_endpoint: str = "http://localhost:9000"
-    object_storage_bucket: str = "hr-documents"
-    embedding_model: str = "BAAI/bge-large-en-v1.5"
-    llm_provider: str = "openai"
+    object_storage_endpoint: str
+    object_storage_bucket: str
+    embedding_model: str
+    llm_provider: str
     llm_api_key: SecretStr | None = None
-    llm_model: str = "gpt-4o-mini"
-    llm_base_url: str = "http://localhost:11434"
-    cors_origins: list[str] = ["http://localhost:5173"]
+    llm_model: str
+    llm_base_url: str
+    cors_origins: list[str]
     otel_endpoint: str | None = None
-    log_level: str = "INFO"
+    log_level: str
 
     @field_validator("app_env")
     @classmethod

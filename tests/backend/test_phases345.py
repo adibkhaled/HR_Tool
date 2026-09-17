@@ -7,6 +7,8 @@ from backend.app.main import app
 from backend.app.rag.vector_store import HashEmbeddingProvider, InMemoryVectorStore, VectorRecord
 from backend.app.rag.pipeline import apply_policy, extract_requirements
 from backend.app.rag.orchestration import aggregate_candidates
+from backend.app.ai.providers import LLMProviderError
+from backend.app.rag.orchestration import orchestrate
 from backend.app.services.repository import repository_service
 
 
@@ -71,6 +73,32 @@ def test_vector_provider_and_filters_are_deterministic() -> None:
     aggregated = aggregate_candidates("Python SQL", extract_requirements("Skills: Python, SQL"), tenant_id="tenant-a", store=store, provider=provider)
     assert aggregated[0].resume_id == "r1"
     assert aggregated[0].matching_skills == ["python", "sql"]
+
+
+def test_llm_outage_degrades_match_instead_of_returning_server_error() -> None:
+    class FailingProvider:
+        model_version = "ollama:test"
+
+        def complete(self, prompt: str, *, max_tokens: int = 1200) -> dict[str, object]:
+            raise LLMProviderError("LLM provider unavailable")
+
+    store = InMemoryVectorStore()
+    provider = HashEmbeddingProvider(dimension=8)
+    vector = provider.embed(["Python SQL"])[0]
+    store.upsert([VectorRecord("ready", "tenant-a", "r1", "resume", "Python SQL", vector)])
+
+    outcome = orchestrate(
+        "Python SQL",
+        extract_requirements("Skills: Python, SQL"),
+        tenant_id="tenant-a",
+        store=store,
+        provider=provider,
+        llm=FailingProvider(),
+    )
+
+    assert outcome["degraded"] is True
+    assert len(outcome["results"]) == 1
+    assert outcome["results"][0].degraded is True
 
 
 def test_requirement_extraction_excludes_protected_attributes() -> None:
