@@ -2,3 +2,5 @@
 .venv/
 uv.lock
 .github/
+tests/__pycache__/*
+tests/*/__pycache__/*

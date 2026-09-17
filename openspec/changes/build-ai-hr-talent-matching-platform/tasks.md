@@ -7,10 +7,10 @@
 
 ## 2. Phase 2: Database, schema, and authentication
 
-- [ ] 2.1 Implement SQLAlchemy models and Alembic migrations for `users`, `employees`, `resumes`, `job_descriptions`, `candidate_matches`, `chat_history`, `audit_logs`, source versions, document chunks, processing operations, match runs, evidence, feedback, refresh tokens, and outbox events; verify migrations apply and roll back on a clean PostgreSQL/pgvector instance.
-- [ ] 2.2 Add ERD, relationship, index, constraint, lifecycle-state, and pgvector index documentation; verify the delivered ERD matches migration metadata and includes tenant, readiness, active-version, and vector-search indexes.
-- [ ] 2.3 Implement JWT login, refresh, logout, bcrypt password hashing, refresh-token rotation/revocation, and role dependencies for HR Admin, Recruiter, and Viewer; verify authentication and token-replay tests pass.
-- [ ] 2.4 Implement object-level authorization, safe error envelopes, append-only audit logging, and configurable retention/deletion lineage; verify cross-scope requests are denied without resource disclosure and derived artifacts are reconciled after deletion.
+- [x] 2.1 Implement SQLAlchemy models and Alembic migrations for `users`, `employees`, `resumes`, `job_descriptions`, `candidate_matches`, `chat_history`, `audit_logs`, source versions, document chunks, processing operations, match runs, evidence, feedback, refresh tokens, and outbox events; verify migrations apply and roll back on a clean PostgreSQL/pgvector instance.
+- [x] 2.2 Add ERD, relationship, index, constraint, lifecycle-state, and pgvector index documentation; verify the delivered ERD matches migration metadata and includes tenant, readiness, active-version, and vector-search indexes.
+- [x] 2.3 Implement JWT login, refresh, logout, bcrypt password hashing, refresh-token rotation/revocation, and role dependencies for HR Admin, Recruiter, and Viewer; verify authentication and token-replay tests pass.
+- [x] 2.4 Implement object-level authorization, safe error envelopes, append-only audit logging, and configurable retention/deletion lineage; verify cross-scope requests are denied without resource disclosure and derived artifacts are reconciled after deletion.
 
 ## 3. Phase 3: Resume upload and repository
 
