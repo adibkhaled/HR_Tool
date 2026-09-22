@@ -16,6 +16,7 @@ Local tests use an in-memory repository and deterministic hash embeddings. They 
 - [CI/CD](#cicd)
 - [Operations and security](#operations-and-security)
 - [Documentation](#documentation)
+- [HR Tool Software](#hr-tool-software)
 - [License and copyright](#license-and-copyright)
 
 ## Product overview
