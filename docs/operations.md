@@ -2,7 +2,7 @@
 
 ## Local stack
 
-Copy `.env.example`, set `POSTGRES_PASSWORD` and a 32+ character `JWT_SECRET`, then run `docker compose -f infra/docker/docker-compose.yml up --build`. The API is available at `http://localhost:8000`; OpenAPI is at `/docs` and the frontend is at `http://localhost:8080`.
+Copy `.env.example`, set `POSTGRES_PASSWORD` and a 32+ character `JWT_SECRET`, then run `docker compose -f infra/docker/docker-compose.yml up --build`. The API is available at `http://localhost:8000`; OpenAPI is at `/docs` and the frontend is at `http://localhost:5147`.
 
 ## Health and metrics
 
