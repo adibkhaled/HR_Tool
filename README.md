@@ -2,10 +2,6 @@
 
 Secure, tenant-scoped, human-reviewed talent matching with FastAPI, React/Vite, PostgreSQL/pgvector, deterministic local fakes, and replaceable AI providers.
 
-Start with [docs/setup.md](docs/setup.md). API examples are in [docs/api-examples.md](docs/api-examples.md), architecture in [docs/architecture.md](docs/architecture.md), the ERD in [docs/erd.md](docs/erd.md), and the RAG flow in [docs/rag-sequence.md](docs/rag-sequence.md).
-
-Deployment and operations guidance is in [docs/deployment.md](docs/deployment.md) and [docs/operator-runbook.md](docs/operator-runbook.md). Privacy constraints are in [docs/privacy-retention.md](docs/privacy-retention.md).
-
 Local tests use an in-memory repository and deterministic hash embeddings. They do not claim real database, provider, cluster, staging, accessibility, or production-scale success.
 
 ## Contents
@@ -115,83 +111,24 @@ docker compose -f infra/docker/docker-compose.yml down
 
 ## Run Docker Hub Images
 
-After successful CI, the publishing workflow creates:
-
-```text
-YOUR_DOCKERHUB_USERNAME/hr-tool-api
-YOUR_DOCKERHUB_USERNAME/hr-tool-frontend
-```
-
-The backend image is reused by both `api` and `worker`. PostgreSQL remains the public `pgvector/pgvector:pg16` image.
 
 Pull the images on a machine with Docker Desktop:
 
 ```powershell
 docker login
-docker pull YOUR_DOCKERHUB_USERNAME/hr-tool-api:latest
-docker pull YOUR_DOCKERHUB_USERNAME/hr-tool-frontend:latest
+docker pull adibkhaled/hr-tool-api:latest
+docker pull adibkhaled/hr-tool-frontend:latest
 ```
-
-For deployment, use a Compose file with these image entries while retaining the environment, health checks, dependencies, and ports from `infra/docker/docker-compose.yml`:
-
-```yaml
-services:
-	api:
-		image: YOUR_DOCKERHUB_USERNAME/hr-tool-api:latest
-	worker:
-		image: YOUR_DOCKERHUB_USERNAME/hr-tool-api:latest
-	frontend:
-		image: YOUR_DOCKERHUB_USERNAME/hr-tool-frontend:latest
-```
-
-Use `sha-<commit>` tags for reproducible deployments instead of `latest`.
 
 ## Configuration
 
 Copy `.env.example` to `.env`. Important variables include:
 
-| Variable | Purpose |
-| --- | --- |
-| `APP_ENV` | Runtime environment |
-| `POSTGRES_PASSWORD` | PostgreSQL password used by Compose |
-| `DATABASE_URL` | Database URL for local non-Compose development |
-| `PGVECTOR_ENABLED` | Enables vector-store integration |
-| `JWT_SECRET` | Authentication secret; use 32+ random characters outside development |
-| `OBJECT_STORAGE_ENDPOINT` | Object-storage endpoint |
-| `OBJECT_STORAGE_BUCKET` | Source-document bucket |
-| `EMBEDDING_MODEL` | Embedding model identifier |
-| `LLM_PROVIDER` | LLM provider name |
-| `LLM_API_KEY` | Provider credential; never commit it |
-| `LLM_MODEL` | LLM model identifier |
-| `LLM_BASE_URL` | LLM API base URL |
-| `CORS_ORIGINS` | JSON list of browser origins |
-
-## Development and testing
-
-```powershell
-uv run ruff check backend tests
-uv run mypy backend
-uv run pytest
-Set-Location frontend
-npm run lint
-npm run typecheck
-npm run test
-npm run build
-Set-Location ..
-```
 
 ## CI/CD
 
 The CI workflow runs on pull requests and pushes to `master` or `main`. It performs backend linting, frontend linting, type checking, frontend tests and build, and a Trivy security scan. The backend pytest step is currently disabled because the CI environment needs required `.env` configuration; run it locally with `uv run pytest` after creating `.env`.
 
-After CI succeeds, `docker-publish.yml` builds and publishes both images to Docker Hub. Configure these GitHub repository secrets:
-
-```text
-DOCKERHUB_USERNAME
-DOCKERHUB_TOKEN
-```
-
-Use a Docker Hub personal access token with push permission. Never place the token in source code or workflow files.
 
 ## Operations and security
 
@@ -212,8 +149,11 @@ Use a Docker Hub personal access token with push permission. Never place the tok
 - [RAG sequence](docs/rag-sequence.md)
 - [Entity relationship diagram](docs/erd.md)
 
+
+## HR Tool Software
+
+![HR_TOOL](images/HR.png)
+
 ## License and copyright
 
-Copyright (c) 2026 Adibqa Solution. All rights reserved.
-
-This repository is provided for authorized use by Adibqa Solution and its permitted users. No license is granted to copy, modify, distribute, or use this software outside terms separately agreed with the copyright holder.
+Copyright (c) 2026 AdibQAQC Solution. All rights reserved.
