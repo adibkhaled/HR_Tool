@@ -12,7 +12,8 @@ jobs:
         with: { version: latest }
       - run: uv sync --dev
       - run: uv run ruff check backend tests
-      #- run: uv run pytest //it need .env file to run the tests, so I commented it out for now.
+      # Required .env
+      #- run: uv run pytest
   frontend:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: frontend } }
@@ -29,5 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@v0.28.0
-        with: { scan-type: fs, scan-ref: ., ignore-unfixed: true, severity: CRITICAL,HIGH }
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
