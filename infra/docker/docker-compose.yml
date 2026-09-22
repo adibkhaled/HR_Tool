@@ -1,3 +1,18 @@
+x-backend-environment: &backend-environment
+  APP_NAME: HR Talent Matching Platform
+  APP_ENV: ${APP_ENV:?set APP_ENV}
+  DATABASE_URL: postgresql+psycopg://hr_tool:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/hr_tool
+  PGVECTOR_ENABLED: ${PGVECTOR_ENABLED:?set PGVECTOR_ENABLED}
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+  OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:?set OBJECT_STORAGE_ENDPOINT}
+  OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:?set OBJECT_STORAGE_BUCKET}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:?set EMBEDDING_MODEL}
+  LLM_PROVIDER: ${LLM_PROVIDER:?set LLM_PROVIDER}
+  LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL}
+  LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL}
+  CORS_ORIGINS: ${CORS_ORIGINS:?set CORS_ORIGINS}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
 services:
   db:
     image: pgvector/pgvector:pg16
@@ -5,15 +20,6 @@ services:
       POSTGRES_DB: hr_tool
       POSTGRES_USER: hr_tool
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
-      APP_ENV: ${APP_ENV:?set APP_ENV}
-      PGVECTOR_ENABLED: ${PGVECTOR_ENABLED:?set PGVECTOR_ENABLED}
-      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
-      OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:?set OBJECT_STORAGE_ENDPOINT}
-      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:?set OBJECT_STORAGE_BUCKET}
-      LLM_PROVIDER: ${LLM_PROVIDER:?set LLM_PROVIDER}
-      LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL}
-      LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL}
-      CORS_ORIGINS: ${CORS_ORIGINS:?set CORS_ORIGINS}
     ports:
       - "5432:5432"
     healthcheck:
@@ -25,20 +31,7 @@ services:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile.backend
-    environment:
-      APP_NAME: HR Talent Matching Platform
-      APP_ENV: ${APP_ENV}
-      DATABASE_URL: postgresql+psycopg://hr_tool:${POSTGRES_PASSWORD}@db:5432/hr_tool
-      PGVECTOR_ENABLED: ${PGVECTOR_ENABLED}
-      JWT_SECRET: ${JWT_SECRET}
-      OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT}
-      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET}
-      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
-      LLM_PROVIDER: ${LLM_PROVIDER}
-      LLM_MODEL: ${LLM_MODEL}
-      LLM_BASE_URL: ${LLM_BASE_URL}
-      CORS_ORIGINS: ${CORS_ORIGINS}
-      LOG_LEVEL: INFO
+    environment: *backend-environment
     ports:
       - "8000:8000"
     depends_on:
@@ -63,20 +56,8 @@ services:
       context: ../..
       dockerfile: infra/docker/Dockerfile.backend
     command: ["python", "-m", "backend.app.worker"]
-    environment:
-      APP_NAME: HR Talent Matching Platform
-      APP_ENV: ${APP_ENV}
-      DATABASE_URL: postgresql+psycopg://hr_tool:${POSTGRES_PASSWORD}@db:5432/hr_tool
-      PGVECTOR_ENABLED: ${PGVECTOR_ENABLED}
-      JWT_SECRET: ${JWT_SECRET}
-      OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT}
-      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET}
-      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
-      LLM_PROVIDER:  ${LLM_PROVIDER}
-      LLM_MODEL: ${LLM_MODEL}
-      LLM_BASE_URL: ${LLM_BASE_URL}
-      CORS_ORIGINS: ${CORS_ORIGINS}
-      LOG_LEVEL: INFO
+    environment: *backend-environment
     depends_on:
       db:
         condition: service_healthy
+

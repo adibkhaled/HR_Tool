@@ -1,7 +1,6 @@
 .python-version
 .venv/
 uv.lock
-.github/
 tests/__pycache__/*
 tests/*/__pycache__/*
 data/*
