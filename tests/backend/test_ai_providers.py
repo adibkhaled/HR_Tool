@@ -1,6 +1,12 @@
 import pytest
 
-from backend.app.ai.providers import AzureOpenAIProvider, DeterministicLLMProvider, LLMProviderError, OllamaProvider, OpenAIProvider
+from backend.app.ai.providers import (
+    AzureOpenAIProvider,
+    DeterministicLLMProvider,
+    LLMProviderError,
+    OllamaProvider,
+    OpenAIProvider,
+)
 
 
 def test_deterministic_provider_is_injectable() -> None:

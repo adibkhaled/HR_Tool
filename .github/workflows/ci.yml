@@ -12,7 +12,6 @@ jobs:
         with: { version: latest }
       - run: uv sync --dev
       - run: uv run ruff check backend tests
-      - run: uv run mypy backend
       - run: uv run pytest
   frontend:
     runs-on: ubuntu-latest

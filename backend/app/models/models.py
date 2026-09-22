@@ -1,20 +1,22 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 
 from sqlalchemy import (
     JSON,
     Boolean,
     DateTime,
-    Enum as SQLEnum,
     Float,
     ForeignKey,
     Integer,
     String,
     Text,
     UniqueConstraint,
+)
+from sqlalchemy import (
+    Enum as SQLEnum,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -28,7 +30,7 @@ class UserRole(str, Enum):
 
 
 def utc_now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class User(Base):
@@ -49,8 +51,8 @@ class User(Base):
         DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
     )
 
-    refresh_tokens: Mapped[list["RefreshToken"]] = relationship(back_populates="user")
-    employee: Mapped["Employee | None"] = relationship(back_populates="user")
+    refresh_tokens: Mapped[list[RefreshToken]] = relationship(back_populates="user")
+    employee: Mapped[Employee | None] = relationship(back_populates="user")
 
 
 class Employee(Base):
@@ -72,7 +74,7 @@ class Employee(Base):
     )
 
     user: Mapped[User | None] = relationship(back_populates="employee")
-    resumes: Mapped[list["Resume"]] = relationship(back_populates="employee")
+    resumes: Mapped[list[Resume]] = relationship(back_populates="employee")
 
 
 class Resume(Base):
@@ -92,8 +94,8 @@ class Resume(Base):
     )
 
     employee: Mapped[Employee | None] = relationship(back_populates="resumes")
-    versions: Mapped[list["SourceVersion"]] = relationship(back_populates="resume")
-    processing_operations: Mapped[list["ProcessingOperation"]] = relationship(back_populates="resume")
+    versions: Mapped[list[SourceVersion]] = relationship(back_populates="resume")
+    processing_operations: Mapped[list[ProcessingOperation]] = relationship(back_populates="resume")
 
 
 class JobDescription(Base):
@@ -112,9 +114,9 @@ class JobDescription(Base):
         DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
     )
 
-    versions: Mapped[list["SourceVersion"]] = relationship(back_populates="job_description")
-    processing_operations: Mapped[list["ProcessingOperation"]] = relationship(back_populates="job_description")
-    match_runs: Mapped[list["MatchRun"]] = relationship(back_populates="job_description")
+    versions: Mapped[list[SourceVersion]] = relationship(back_populates="job_description")
+    processing_operations: Mapped[list[ProcessingOperation]] = relationship(back_populates="job_description")
+    match_runs: Mapped[list[MatchRun]] = relationship(back_populates="job_description")
 
 
 class CandidateMatch(Base):

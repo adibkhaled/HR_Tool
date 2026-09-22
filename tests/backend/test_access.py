@@ -3,8 +3,8 @@ import pytest
 from backend.app.auth.security import (
     UserRole,
     create_access_token,
-    require_roles,
     hash_password,
+    require_roles,
     verify_password,
     verify_token,
 )

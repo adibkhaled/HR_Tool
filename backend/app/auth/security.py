@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import secrets
 import string
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from enum import Enum
 
 import jwt
@@ -31,7 +31,7 @@ def verify_password(password: str, password_hash: str) -> bool:
 
 def create_access_token(subject: str, role: UserRole, *, expires_in_minutes: int = 60) -> str:
     settings = get_settings()
-    issued_at = datetime.now(timezone.utc)
+    issued_at = datetime.now(UTC)
     payload = {
         "sub": subject,
         "role": role.value,

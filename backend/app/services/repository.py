@@ -5,16 +5,16 @@ import re
 import uuid
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
 
-from backend.app.rag.vector_store import HashEmbeddingProvider, InMemoryVectorStore, VectorRecord
-from backend.app.rag.pipeline import extract_requirements
-from backend.app.rag.orchestration import orchestrate
-from backend.app.services.document_pipeline import chunk_text, extract_text, parse_skills
 from backend.app.core.correlation import get_correlation_id
 from backend.app.core.metrics import metrics_registry
+from backend.app.rag.orchestration import orchestrate
+from backend.app.rag.pipeline import extract_requirements
+from backend.app.rag.vector_store import HashEmbeddingProvider, InMemoryVectorStore, VectorRecord
+from backend.app.services.document_pipeline import chunk_text, extract_text, parse_skills
 
 
 @dataclass
@@ -27,7 +27,7 @@ class ResumeRecord:
     text: str
     status: str = "ready"
     archived: bool = False
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     source_hash: str = ""
     source_uri: str = ""
     version: int = 1
@@ -46,7 +46,7 @@ class JobRecord:
     description: str
     status: str = "draft"
     archived: bool = False
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     version: int = 1
     operation_id: str = ""
     source_uri: str = ""
@@ -206,7 +206,7 @@ class RepositoryService:
         run_id = str(uuid.uuid4())
         requirements = extract_requirements(job.description)
         operation_id = str(uuid.uuid4())
-        self.operations[operation_id] = {"id": operation_id, "type": "match", "status": "processing", "resource_id": run_id, "created_at": datetime.now(timezone.utc).isoformat()}
+        self.operations[operation_id] = {"id": operation_id, "type": "match", "status": "processing", "resource_id": run_id, "created_at": datetime.now(UTC).isoformat()}
         self.operations[operation_id]["correlation_id"] = get_correlation_id()
         metrics_registry.increment("hr_tool_match_runs_total")
         outcome = orchestrate(job.description, requirements, tenant_id=tenant_id, store=self.vector_store, provider=self.embeddings, top_k=min(top_k, 50), llm=self.llm)

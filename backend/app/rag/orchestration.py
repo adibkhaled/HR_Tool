@@ -1,7 +1,13 @@
 from __future__ import annotations
 
 from backend.app.ai.providers import BaseLLMProvider, DeterministicLLMProvider, LLMProviderError
-from backend.app.rag.pipeline import Evidence, RagResult, Requirements, apply_policy, retrieve_candidates
+from backend.app.rag.pipeline import (
+    Evidence,
+    RagResult,
+    Requirements,
+    apply_policy,
+    retrieve_candidates,
+)
 from backend.app.rag.vector_store import EmbeddingProvider, VectorStore
 
 

@@ -78,4 +78,3 @@ class PgVectorStore(InMemoryVectorStore):
     The in-memory behavior makes API and provider contracts usable without a running database.
     """
 
-    pass

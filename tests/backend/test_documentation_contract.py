@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 
 from backend.app.main import app
 
-
 ROOT = Path(__file__).parents[2]
 
 

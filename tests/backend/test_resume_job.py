@@ -3,12 +3,11 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 from fastapi.testclient import TestClient
 
-from backend.app.main import app
-from backend.app.rag.vector_store import HashEmbeddingProvider, InMemoryVectorStore, VectorRecord
-from backend.app.rag.pipeline import apply_policy, extract_requirements
-from backend.app.rag.orchestration import aggregate_candidates
 from backend.app.ai.providers import LLMProviderError
-from backend.app.rag.orchestration import orchestrate
+from backend.app.main import app
+from backend.app.rag.orchestration import aggregate_candidates, orchestrate
+from backend.app.rag.pipeline import apply_policy, extract_requirements
+from backend.app.rag.vector_store import HashEmbeddingProvider, InMemoryVectorStore, VectorRecord
 from backend.app.services.repository import repository_service
 
 
